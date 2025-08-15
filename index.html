@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proteu AI x Google Cloud Brasil</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", Arial, sans-serif;
+        background: #0e1152;
+        color: white;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .slide {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      .slide-header {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+      }
+
+      .proteu-logo {
+        height: 40px;
+        width: auto;
+        filter: brightness(0) invert(1); /* Makes logo white if it's dark */
+      }
+
+      .slide-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 193, 7, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #ffc107;
+        border: 2px solid #ffc107;
+      }
+
+      .slide-content {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 80px 40px 40px 40px; /* Extra top padding for header */
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        max-width: 1000px;
+        width: 100%;
+        animation: slideInUp 0.8s ease-out;
+        position: relative;
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h1 {
+        font-size: 3.5em;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #ffc107;
+      }
+
+      h2 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        text-align: center;
+        color: #fff;
+      }
+
+      h3 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        color: #ffc107;
+      }
+
+      .subtitle {
+        font-size: 1.5em;
+        text-align: center;
+        margin-bottom: 40px;
+        opacity: 0.9;
+      }
+
+      .proteu-colors {
+        color: #ffc107;
+        font-weight: bold;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .stat-number {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #ffc107;
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 1.1em;
+        opacity: 0.9;
+        margin-top: 10px;
+      }
+
+      .architecture-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+
+      .service-card {
+        background: rgba(0, 123, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        border-left: 4px solid #007bff;
+        transition: all 0.3s ease;
+      }
+
+      .service-card:hover {
+        background: rgba(0, 123, 255, 0.2);
+        transform: scale(1.02);
+      }
+
+      .service-name {
+        font-weight: bold;
+        color: #007bff;
+        margin-bottom: 10px;
+      }
+
+      .service-description {
+        font-size: 0.9em;
+        opacity: 0.9;
+      }
+
+      .differentials {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin: 30px 0;
+      }
+
+      .differentials.vertical {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin: 30px 0;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .differential-card {
+        background: rgba(0, 123, 255, 0.15);
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .differential-title {
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #ffc107;
+      }
+
+      .magic-moment {
+        background: rgba(255, 193, 7, 0.1);
+        padding: 30px;
+        border-radius: 20px;
+        margin: 30px 0;
+        border-left: 5px solid #ffc107;
+      }
+
+      .quote {
+        font-size: 1.3em;
+        font-style: italic;
+        text-align: center;
+        color: white;
+        margin-bottom: 15px;
+      }
+
+      .quote-white {
+        color: white;
+        font-weight: bold;
+      }
+
+      .quote-highlight {
+        color: #ffc107;
+        font-weight: bold;
+      }
+
+      .example-highlight {
+        color: #ffc107;
+        font-weight: bold;
+      }
+
+      .example-section {
+        margin: 15px 0;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        border-left: 3px solid #ffc107;
+      }
+
+      .example-label {
+        color: #ffc107;
+        font-weight: bold;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+      }
+
+      .partnership-benefits {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin: 30px 0;
+      }
+
+      .benefit-section h4 {
+        color: #ffc107;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        font-weight: bold;
+      }
+
+      .benefit-section ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .benefit-section li {
+        padding: 8px 0;
+        border-left: 3px solid #ffc107;
+        padding-left: 15px;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 5px;
+      }
+
+      .cta-button {
+        background: #ffc107;
+        color: #0e1152;
+        padding: 15px 40px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.2em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 20px auto;
+        display: block;
+      }
+
+      .cta-button:hover {
+        background: #007bff;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .navigation {
+        position: fixed;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+      }
+
+      .nav-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        margin: 10px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .nav-dot.active {
+        background: #007bff;
+        transform: scale(1.3);
+      }
+
+      .flow-diagram {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 30px 0;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .flow-step {
+        background: rgba(0, 123, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        flex: 1;
+        min-width: 150px;
+        position: relative;
+      }
+
+      .flow-step:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        right: -15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5em;
+        color: #007bff;
+      }
+
+      .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+        margin: 30px 0;
+      }
+
+      .tech-badge {
+        background: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 0.9em;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.5em;
+        }
+        h2 {
+          font-size: 2em;
+        }
+        .slide-content {
+          padding: 60px 20px 20px 20px;
+        }
+        .partnership-benefits {
+          grid-template-columns: 1fr;
+        }
+        .flow-step:not(:last-child)::after {
+          display: none;
+        }
+        .slide-header {
+          top: 10px;
+          left: 10px;
+          right: 10px;
+        }
+        .proteu-logo {
+          height: 30px;
+        }
+        .slide-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+    INSTRUÇÕES PARA ADICIONAR O LOGO REAL DA PROTEU AI:
+    
+    1. Substitua todas as ocorrências de:
+       src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8dGV4dCB4PSI2MCIgeT0iMjQiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0iSW50ZXIiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlByb3RldSBBSTwvdGV4dD4KPHN2Zz4="
+       
+    2. Pelo caminho do seu logo real:
+       src="assets/images/logo-white.svg"
+       ou
+       src="https://proteuai.com.br/logo.png"
+    
+    3. O logo aparecerá em branco automaticamente devido ao filtro CSS aplicado
+    4. Se quiser manter as cores originais do logo, remova ou comente a linha:
+       filter: brightness(0) invert(1);
+       no CSS da classe .proteu-logo
+    -->
+
+    <div class="navigation">
+      <div class="nav-dot active" onclick="scrollToSlide(0)"></div>
+      <div class="nav-dot" onclick="scrollToSlide(1)"></div>
+      <div class="nav-dot" onclick="scrollToSlide(2)"></div>
+      <div class="nav-dot" onclick="scrollToSlide(3)"></div>
+      <div class="nav-dot" onclick="scrollToSlide(4)"></div>
+      <div class="nav-dot" onclick="scrollToSlide(5)"></div>
+      <div class="nav-dot" onclick="scrollToSlide(6)"></div>
+      <div class="nav-dot" onclick="scrollToSlide(7)"></div>
+    </div>
+
+    <div class="container">
+      <!-- Slide 1: Abertura -->
+      <div class="slide" id="slide-0">
+        <div class="slide-content">
+          <div class="slide-header">
+            <img
+              src="assets/images/logo-white.svg"
+              alt="Proteu AI"
+              class="proteu-logo"
+            />
+          </div>
+          <h1>Proteu AI</h1>
+          <p class="subtitle">
+            Transformando dados em
+            <span class="proteu-colors">ações executáveis</span> para PMEs
+            brasileiras
+          </p>
+          <div class="magic-moment">
+            <p class="quote">
+              Enquanto outros sistemas dizem
+              <span class="quote-white">você tem um problema</span>, o Proteu AI
+              diz
+              <span class="quote-highlight"
+                >você tem este problema específico, causado por estes fatores, e
+                aqui está exatamente o que fazer para resolvê-lo</span
+              >
+            </p>
+          </div>
+          <div class="tech-stack">
+            <span class="tech-badge">100% Google Cloud Native</span>
+            <span class="tech-badge">Powered by Gemini AI</span>
+            <span class="tech-badge">Arquitetura Empresarial</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2: O Mercado -->
+      <div class="slide" id="slide-1">
+        <div class="slide-content">
+          <div class="slide-header">
+            <img
+              src="assets/images/logo-white.svg"
+              alt="Proteu AI"
+              class="proteu-logo"
+            />
+          </div>
+          <h2>O Mercado que Atendemos</h2>
+          <p class="subtitle">
+            PMEs brasileiras enfrentam uma tríade crítica de dores financeiras
+          </p>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-number">90%</span>
+              <div class="stat-label">
+                das PMEs enfrentam dificuldades severas na gestão financeira
+              </div>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">92%</span>
+              <div class="stat-label">demonstram otimismo com IA</div>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">0</span>
+              <div class="stat-label">
+                soluções atuais oferecem análise de rentabilidade por projeto
+                com IA
+              </div>
+            </div>
+          </div>
+
+          <div class="differentials vertical">
+            <div class="differential-card">
+              <div class="differential-title">Tirania da Planilha</div>
+              <p>62% frustração intensa com ferramentas atuais</p>
+            </div>
+            <div class="differential-card">
+              <div class="differential-title">Cegueira de Rentabilidade</div>
+              <p>58% frustração com falta de visibilidade</p>
+            </div>
+            <div class="differential-card">
+              <div class="differential-title">Gargalo da Integração</div>
+              <p>62% frustração com sistemas desconectados</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Nossa Solução -->
+      <div class="slide" id="slide-2">
+        <div class="slide-content">
+          <div class="slide-header">
+            <img
+              src="assets/images/logo-white.svg"
+              alt="Proteu AI"
+              class="proteu-logo"
+            />
+          </div>
+          <h2>Nossa Solução: Da Análise à Ação</h2>
+          <p class="subtitle">
+            Sistema inteligente para análise de rentabilidade com
+            <span class="proteu-colors">IA multicamada</span>
+          </p>
+
+          <div class="flow-diagram">
+            <div class="flow-step">
+              <h4>Dados Omie ERP</h4>
+              <p>7 endpoints especializados</p>
+            </div>
+            <div class="flow-step">
+              <h4>Classificação IA</h4>
+              <p>Multi-fator inteligente</p>
+            </div>
+            <div class="flow-step">
+              <h4>Análise Causal</h4>
+              <p>Powered by Gemini</p>
+            </div>
+            <div class="flow-step">
+              <h4>Ações Específicas</h4>
+              <p>Contatos, valores, prazos</p>
+            </div>
+          </div>
+
+          <div class="magic-moment">
+            <h3>O "Momento Mágico"</h3>
+            <div class="example-section">
+              <div class="example-label">Interpretação em LLM:</div>
+              <p>Projeto X está com margem negativa de -15%</p>
+            </div>
+            <div class="example-section">
+              <div class="example-label">Análise Causal:</div>
+              <p>
+                Custo com fornecedor Y aumentou 40%, impactando a Margem
+                negativamente.
+              </p>
+            </div>
+            <div class="example-section">
+              <div class="example-label">Ação recomendada específica:</div>
+              <p>
+                Renegociar redução de contrato em 25% com Y (contato:
+                <span class="example-highlight"
+                  >João Silva - joao@fornecedory.com</span
+                >) ou migrar para fornecedor Z. Concluir a ação em até 15 dias.
+              </p>
+            </div>
+            <div class="example-section">
+              <div class="example-label">Impacto esperado:</div>
+              <p>Aumento na Margem do projeto X em 30% nos próximos 60 dias.</p>
+            </div>
+            <div class="example-section">
+              <div class="example-label">Acompanhamento automático:</div>
+              <p>
+                Ação criada no sistema com tracking em tempo real e notificações
+                de progresso.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Sistema de Geração e Acompanhamento de Ações -->
+      <div class="slide" id="slide-4">
+        <div class="slide-content">
+          <div class="slide-header">
+            <img
+              src="assets/images/logo-white.svg"
+              alt="Proteu AI"
+              class="proteu-logo"
+            />
+          </div>
+          <h2>
+            Sistema de Geração e Acompanhamento de
+            <span class="proteu-colors">Ações Inteligentes</span>
+          </h2>
+          <p class="subtitle">
+            Da detecção à execução: pipeline completo com
+            <span class="proteu-colors">machine learning evolutivo</span>
+          </p>
+
+          <div class="flow-diagram">
+            <div class="flow-step">
+              <h4>Geração</h4>
+              <p>ActionTemplateEngine + Orchestrator</p>
+            </div>
+            <div class="flow-step">
+              <h4>Validação</h4>
+              <p>Compliance + Feasibility</p>
+            </div>
+            <div class="flow-step">
+              <h4>Execução</h4>
+              <p>ActionTracker + Milestones</p>
+            </div>
+            <div class="flow-step">
+              <h4>Aprendizado</h4>
+              <p>EffectivenessAnalyzer + ML</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-number">95%+</span>
+              <div class="stat-label">Precisão na atribuição automática</div>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">7</span>
+              <div class="stat-label">
+                Estágios de validação antes da execução
+              </div>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">24/7</span>
+              <div class="stat-label">
+                Monitoramento contínuo com alertas inteligentes
+              </div>
+            </div>
+          </div>
+
+          <div class="differentials vertical">
+            <div class="differential-card">
+              <div class="differential-title">Geração Automática de Ações</div>
+              <p style="margin-bottom: 15px">
+                Sistema automatizado que cria ações específicas para cada
+                problema
+              </p>
+              <p style="margin-bottom: 15px">
+                Biblioteca com mais de 50 modelos para diferentes situações
+              </p>
+              <p style="margin-bottom: 15px">
+                Designa automaticamente a pessoa certa para cada tarefa
+              </p>
+              <p>Define prioridades baseadas no impacto no negócio</p>
+            </div>
+
+            <div class="differential-card">
+              <div class="differential-title">Acompanhamento em Tempo Real</div>
+              <p style="margin-bottom: 15px">
+                Monitora o progresso de cada ação do início ao fim
+              </p>
+              <p style="margin-bottom: 15px">
+                Acompanha prazos, custos e resultados esperados
+              </p>
+              <p style="margin-bottom: 15px">
+                Relatórios visuais para gestores acompanharem o progresso
+              </p>
+              <p>Avisos automáticos quando há atrasos ou problemas</p>
+            </div>
+
+            <div class="differential-card">
+              <div class="differential-title">Machine Learning Evolutivo</div>
+              <p style="margin-bottom: 15px">
+                Analisa se as ações realmente funcionaram na prática
+              </p>
+              <p style="margin-bottom: 15px">
+                Aprende com cada ação executada para melhorar as próximas
+              </p>
+              <p style="margin-bottom: 15px">
+                Prevê a chance de sucesso antes mesmo de executar
+              </p>
+              <p>Recomendações ficam mais precisas com o tempo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Arquitetura Google Cloud -->
+      <div class="slide" id="slide-5">
+        <div class="slide-content">
+          <div class="slide-header">
+            <img
+              src="assets/images/logo-white.svg"
+              alt="Proteu AI"
+              class="proteu-logo"
+            />
+          </div>
+          <h2>100% <span class="proteu-colors">Google Cloud Native</span></h2>
+          <p class="subtitle">
+            Arquitetura empresarial construída para escalar
+          </p>
+
+          <div class="architecture-grid">
+            <div class="service-card">
+              <div class="service-name">Firebase Cloud Functions v2</div>
+              <div class="service-description">
+                Pipeline serverless com processamento paralelo
+              </div>
+            </div>
+            <div class="service-card">
+              <div class="service-name">Google Generative AI (Gemini)</div>
+              <div class="service-description">
+                Análise causal e detecção de padrões sutis
+              </div>
+            </div>
+            <div class="service-card">
+              <div class="service-name">Firestore</div>
+              <div class="service-description">
+                Base NoSQL para dados estruturados
+              </div>
+            </div>
+            <div class="service-card">
+              <div class="service-name">Google Pub/Sub</div>
+              <div class="service-description">
+                Orquestração assíncrona do pipeline
+              </div>
+            </div>
+            <div class="service-card">
+              <div class="service-name">Cloud Storage</div>
+              <div class="service-description">Backup e dados históricos</div>
+            </div>
+            <div class="service-card">
+              <div class="service-name">Secret Manager</div>
+              <div class="service-description">
+                Gestão segura de credenciais
+              </div>
+            </div>
+          </div>
+
+          <div class="differentials">
+            <div class="differential-card">
+              <div class="differential-title">Chaos Engineering</div>
+              <p>Testes de resiliência em produção</p>
+            </div>
+            <div class="differential-card">
+              <div class="differential-title">Blue-Green Deployment</div>
+              <p>Zero-downtime com rollback < 5min</p>
+            </div>
+            <div class="differential-card">
+              <div class="differential-title">Distributed Tracing</div>
+              <p>OpenTelemetry para observabilidade</p>
+            </div>
+            <div class="differential-card">
+              <div class="differential-title">CI/CD 7 Estágios</div>
+              <p>Pipeline empresarial automatizado</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Diferenciais Técnicos -->
+      <div class="slide" id="slide-4">
+        <div class="slide-content">
+          <div class="slide-header">
+            <img
+              src="assets/images/logo-white.svg"
+              alt="Proteu AI"
+              class="proteu-logo"
+            />
+          </div>
+          <h2>Nossos Diferenciais Competitivos</h2>
+          <p class="subtitle">
+            Tecnologia avançada com inteligência de negócio brasileira
+          </p>
+
+          <div class="differentials">
+            <div class="differential-card">
+              <div class="differential-title">IA Multicamada</div>
+              <p style="margin-bottom: 15px">
+                <strong>Detecção Estatística:</strong> Z-Score, tendências,
+                mudanças bruscas
+              </p>
+              <p style="margin-bottom: 15px">
+                <strong>Padrões Sutis via Gemini:</strong> Anomalias não-óbvias
+              </p>
+              <p>
+                <strong>Análise Causal:</strong> Descoberta automática do
+                "porquê"
+              </p>
+            </div>
+
+            <div class="differential-card">
+              <div class="differential-title">Inteligência Brasileira</div>
+              <p style="margin-bottom: 15px">
+                <strong>Impostos:</strong> PIS, COFINS, ISS, IRRF, CSLL, INSS
+              </p>
+              <p style="margin-bottom: 15px">
+                <strong>DRE Automatizada:</strong> Classificação por tipo_gasto
+              </p>
+              <p><strong>Integração Omie:</strong> 7 clientes especializados</p>
+            </div>
+
+            <div class="differential-card">
+              <div class="differential-title">Ações Ultra-Específicas</div>
+              <p style="margin-bottom: 15px">
+                <strong>Contatos:</strong> Nome, email, telefone
+              </p>
+              <p style="margin-bottom: 15px">
+                <strong>Valores:</strong> Impacto financeiro estimado
+              </p>
+              <p><strong>Prazos:</strong> Recomendações temporais</p>
+            </div>
+
+            <div class="differential-card">
+              <div class="differential-title">Sistema Evolutivo</div>
+              <p style="margin-bottom: 15px">
+                <strong>Feedback Loop:</strong> Aprendizado contínuo
+              </p>
+              <p style="margin-bottom: 15px">
+                <strong>Melhoria:</strong> Recomendações cada vez mais precisas
+              </p>
+              <p><strong>Adaptação:</strong> Particularidades de cada PME</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-number">90%+</span>
+              <div class="stat-label">Cobertura de testes automatizados</div>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">521/570</span>
+              <div class="stat-label">Testes passando (91,4%)</div>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">540s</span>
+              <div class="stat-label">Timeout de pipeline otimizado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6: Proposta de Parceria -->
+      <div class="slide" id="slide-5">
+        <div class="slide-content">
+          <div class="slide-header">
+            <img
+              src="assets/images/logo-white.svg"
+              alt="Proteu AI"
+              class="proteu-logo"
+            />
+          </div>
+          <h2>Proposta de Parceria Estratégica</h2>
+          <p class="subtitle">
+            Juntos, podemos
+            <span class="proteu-colors">democratizar a IA</span> para PMEs
+            brasileiras
+          </p>
+
+          <div class="partnership-benefits">
+            <div class="benefit-section">
+              <h4>Para o Google Cloud</h4>
+              <ul>
+                <li>Case de sucesso real de IA aplicada</li>
+                <li>Demonstração prática do poder do Gemini</li>
+                <li>Penetração no mercado PME brasileiro</li>
+                <li>Arquitetura de referência enterprise</li>
+                <li>Showcase de integração completa GCP</li>
+              </ul>
+            </div>
+
+            <div class="benefit-section">
+              <h4>Para a Proteu AI</h4>
+              <ul>
+                <li>Acesso a programas de parceria</li>
+                <li>Suporte técnico avançado</li>
+                <li>Créditos para escalar a solução</li>
+                <li>Visibilidade no ecossistema Google</li>
+                <li>Participação em eventos e marketing</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="magic-moment">
+            <h3>Nosso Objetivo Conjunto</h3>
+            <p>
+              Transformar o Proteu AI no primeiro copiloto financeiro
+              verdadeiramente inteligente do Brasil, demonstrando como a
+              arquitetura Google Cloud pode resolver problemas reais de negócio
+              com IA avançada.
+            </p>
+          </div>
+
+          <button
+            class="cta-button"
+            onclick="window.open('https://proteuai.com.br', '_blank')"
+          >
+            Conheça nossa solução completa
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function scrollToSlide(index) {
+        const slide = document.getElementById(`slide-${index}`);
+        slide.scrollIntoView({ behavior: "smooth" });
+
+        // Update navigation
+        document.querySelectorAll(".nav-dot").forEach((dot, i) => {
+          dot.classList.toggle("active", i === index);
+        });
+      }
+
+      // Auto-update navigation on scroll
+      window.addEventListener("scroll", () => {
+        const slides = document.querySelectorAll(".slide");
+        const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+        slides.forEach((slide, index) => {
+          const slideTop = slide.offsetTop;
+          const slideBottom = slideTop + slide.offsetHeight;
+
+          if (scrollPosition >= slideTop && scrollPosition <= slideBottom) {
+            document.querySelectorAll(".nav-dot").forEach((dot, i) => {
+              dot.classList.toggle("active", i === index);
+            });
+          }
+        });
+      });
+
+      // Add smooth scrolling for better UX
+      document.documentElement.style.scrollBehavior = "smooth";
+    </script>
+  </body>
+</html>
